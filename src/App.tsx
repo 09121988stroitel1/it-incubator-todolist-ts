@@ -24,6 +24,13 @@ function App() {
         tasksObj[todoLisyId] = filteredTasks
         setTasksObj({...tasksObj})
     }
+    function changeTodoListTitle (newTitle: string, id: string) {
+      const todolist = todoLists.find(t=> t.id === id)
+      if(todolist) {
+          todolist.title = newTitle
+          setTodoList([...todoLists])
+      }
+    }
 
     function addTask(newTaskTitle: string, todoLisyId: string) {
         let task = {id: v1(), title: newTaskTitle, isDone: false}
@@ -49,7 +56,15 @@ function App() {
             tasksObj[todoLisyId] = [...tasks]
             setTasksObj({...tasksObj})
         }
-
+    }
+    function changeTaskTitle (taskId: string, newValue: string, todoLisyId: string) {
+        let tasks = tasksObj[todoLisyId]
+        let task = tasks.find(i => i.id === taskId)
+        if (task) {
+            task.title = newValue
+            tasksObj[todoLisyId] = [...tasks]
+            setTasksObj({...tasksObj})
+        }
     }
 
     let todoListId1 = v1()
@@ -60,10 +75,10 @@ function App() {
         {id: todoListId2, title: 'What to buy', filter: 'all'},
     ])
 
-    let removeTodoList = (todoLisyId: string) => {
-        let filteredTodoList = todoLists.filter(tl => tl.id !== todoLisyId)
+    let removeTodoList = (todoListId: string) => {
+        let filteredTodoList = todoLists.filter(tl => tl.id !== todoListId)
         setTodoList(filteredTodoList)
-        delete tasksObj[todoLisyId]
+        delete tasksObj[todoListId]
         setTasksObj({...tasksObj})
     }
 
@@ -76,7 +91,6 @@ function App() {
         [todoListId2]: [
             {id: v1(), title: 'Book', isDone: true},
             {id: v1(), title: 'Milk', isDone: false},
-
         ]
     })
 
@@ -93,7 +107,6 @@ function App() {
             [todoList.id]: []
         })
     }
-
     return (
         <div className="App">
             <AddItemForm addItem={addTodoList}/>
@@ -120,6 +133,8 @@ function App() {
                             changeTaskStatus={changeStatus}
                             filter={tl.filter}
                             removeTodoList={removeTodoList}
+                            changeTaskTitle={changeTaskTitle}
+                            changeTodoListTitle={changeTodoListTitle}
                         />
                     )
                 })
